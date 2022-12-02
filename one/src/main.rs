@@ -9,13 +9,18 @@ fn part_one( calories : &Vec<u32> ) {
     println!("\nPart 1: elf with most calories: {}", largest );
 }
 
-fn part_two( calories : Vec<u32> ) {
+fn part_two( calories : &Vec<u32> ) {
 
+    // Need to get an owned mutable copy to sort, etc.
+    //
     let mut mvec = calories.to_vec();
     mvec.sort();
-    
+    mvec.reverse(); // get descending order...
+
+    // Take the top 3 (the largest 3), then get their sum
     let top3 = mvec.iter().take(3);
     let total = top3.fold( 0, |acc, n| acc + n );
+    
     println!("Sum of top 3 calories: {}", total);
 }
 
@@ -46,8 +51,8 @@ fn main() {
         }
     }
 
-    part_one( &elf_calories );
-    part_two ( elf_calories );
+    part_one ( &elf_calories );
+    part_two ( &elf_calories );
 
 }
 
