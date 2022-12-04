@@ -18,8 +18,8 @@ fn part_one( moves : &Vec<String> ) {
             ("A","Z") => { points = points + 3 + 0; }, // Lost
             ("B","X") => { points = points + 1 + 0; }, // Lost
             ("B","Y") => { points = points + 2 + 3; }, // Draw
-            ("B","Z") => { points = points + 3 + 6; }, // Win
-            ("C","X") => { points = points + 1 + 6; }, // Win
+            ("B","Z") => { points = points + 3 + 6; }, // Won
+            ("C","X") => { points = points + 1 + 6; }, // Won
             ("C","Y") => { points = points + 2 + 0; }, // Lost
             ("C","Z") => { points = points + 3 + 3; }, // Draw
             _ => { points = 0; }
