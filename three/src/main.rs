@@ -51,6 +51,8 @@ fn part_two( sack_lines : &Vec<String> ) {
 
     });
 
+    // Take care of the last set's intersection...
+    //
     total_priority = total_priority + calc_priority(&group);
 
     println!("Total priority: {}", total_priority );
