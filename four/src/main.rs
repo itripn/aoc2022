@@ -1,12 +1,84 @@
 
 use std::fs::File;
 use std::io::{self, BufRead};
+use std::collections::HashSet;
+use std::ops::RangeInclusive;
 use std::path::Path;
+use regex::Regex;
 
+
+    // let a = 3..12;
+    // let b = 4..12;
+    //
+    // println!("a len: {}", a.len());
+    // println!("b len: {}", b.len());
+    //
+    // let aset : HashSet<u32> = a.collect();
+    // let bset : HashSet<u32> = b.collect();
+    //
+    // let intersection = aset.intersection(&bset);
+    //
+    // println!("{:?}", intersection);
+    // let isec : Vec<u32> = intersection.map(|n| *n ).collect();
+    // let bvec = Vec::from_iter(bset);
+    //
+    // assert!( bvec == isec, "not equal!");
+
+
+fn parse_ranges( assignments : &String ) -> Vec<u32> {
+
+    let re = Regex::new(r"(\d+)-(\d+),(\d+)-(\d+)").unwrap();
+    let foo = re.captures( assignments ).unwrap();
+
+
+    let sval1 = foo.get(1).map_or("", |m| m.as_str());
+    let sval2 = foo.get(2).map_or("", |m| m.as_str());
+    let sval3 = foo.get(3).map_or("", |m| m.as_str());
+    let sval4 = foo.get(4).map_or("", |m| m.as_str());
+
+    return [
+        sval1.parse::<u32>().unwrap(),
+        sval2.parse::<u32>().unwrap(),
+        sval3.parse::<u32>().unwrap(),
+        sval4.parse::<u32>().unwrap(),
+    ].to_vec();
+
+}
+
+fn ranges_fully_contain( range_bounds : &Vec<u32> ) -> bool {
+
+    let r1 = RangeInclusive::new( range_bounds[0], range_bounds[1]);
+    let r2 = RangeInclusive::new( range_bounds[2], range_bounds[3]);
+    let aset : HashSet<u32> = r1.collect();
+    let bset : HashSet<u32> = r2.collect();   
+    let intersection = aset.intersection(&bset);   
+    let isec : Vec<u32> = intersection.map(|n| *n ).collect();
+
+    let bvec = if aset.len() > bset.len() {
+        Vec::from_iter(bset.clone())
+    }
+    else {
+        Vec::from_iter(aset.clone())
+    };
+    
+    bvec == isec
+}
+
+fn ranges_overlap_at_all( range_bounds : &Vec<u32> ) -> bool {
+
+    let r1 = RangeInclusive::new( range_bounds[0], range_bounds[1] );
+    let r2 = RangeInclusive::new( range_bounds[2], range_bounds[3] );
+
+    r1.contains(r2.start()) || r1.contains(r2.end()) || r2.contains(r1.start()) || r2.contains(r1.end())
+}
 
 fn main() {
 
-    // let mut data : Vec<Vec<char>> = Vec::new();
+    // Each line is: 71-97,71-72
+
+    let mut fully_overlapping_assignment_count = 0u32;
+    let mut any_overlapping_assignment_count = 0u32;
+
 
     // Read lines into a vector
     //
@@ -19,11 +91,22 @@ fn main() {
                 if l.len() > 0 {
                     // let row : Vec<char> = l.chars().collect();
                     // data.push( row );
-                    println!( "{}", l );
+                    let range_bounds = parse_ranges(&l);
+                    if ranges_fully_contain( &range_bounds ) {
+                        fully_overlapping_assignment_count = fully_overlapping_assignment_count + 1;
+                    }
+
+                    if ranges_overlap_at_all( &range_bounds ) {
+                        any_overlapping_assignment_count = any_overlapping_assignment_count + 1;
+                    }                    
                 }
             }
         }
     }
+
+    println!("Overlapping count: {}", fully_overlapping_assignment_count );
+    println!("Any Overlapping count: {}", any_overlapping_assignment_count );
+
 }
 
 
