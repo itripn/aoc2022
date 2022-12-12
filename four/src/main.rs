@@ -69,6 +69,8 @@ fn ranges_overlap_at_all( range_bounds : &Vec<u32> ) -> bool {
     let r1 = RangeInclusive::new( range_bounds[0], range_bounds[1] );
     let r2 = RangeInclusive::new( range_bounds[2], range_bounds[3] );
 
+    // Lazy but easy...
+    //
     r1.contains(r2.start()) || r1.contains(r2.end()) || r2.contains(r1.start()) || r2.contains(r1.end())
 }
 
