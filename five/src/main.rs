@@ -48,7 +48,7 @@ fn main() {
                 if l.len() > 0 {
                     // let row : Vec<char> = l.chars().collect();
                     // data.push( row );
-                    println!( "{}", l );
+                    // println!( "{}", l );
                 }
             }
         }
