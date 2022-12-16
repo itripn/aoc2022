@@ -82,7 +82,6 @@ fn main() {
     let mut p2containers = get_initial_state();
 
     // print_stacks(&containers);
-
     // Read lines into a vector
     //
     if let Ok(lines) = read_lines("input.txt") {
@@ -90,16 +89,6 @@ fn main() {
         for line in lines.flatten() {
             if !line.is_empty() {
                 execute_step(&line, &mut containers, false);
-            }
-        }
-    }
-
-    // Read lines into a vector
-    //
-    if let Ok(lines) = read_lines("input.txt") {
-        // Consumes the iterator, returns an (Optional) String
-        for line in lines.flatten() {
-            if !line.is_empty() {
                 execute_step(&line, &mut p2containers, true);
             }
         }
