@@ -44,7 +44,7 @@ fn get_initial_state() -> Vec<VecDeque<char>> {
     Vec::from([one, two, three, four, five, six, seven, eight, nine])
 }
 
-fn execute_step(line: &str, state: &mut Vec<VecDeque<char>>, part2: bool) {
+fn execute_step(line: &str, state: &mut [VecDeque<char>], part2: bool) {
     // move <count> from <stack #> to <stack #>
     lazy_static! {
         static ref RE: Regex = Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
@@ -56,21 +56,11 @@ fn execute_step(line: &str, state: &mut Vec<VecDeque<char>>, part2: bool) {
     let tstack = caps.get(3).map_or(0, |m| m.as_str().parse().unwrap()) - 1;
 
     if part2 {
-        // println!("working job: {} from {} to {}", count, fstack+1, tstack+1 );
-
-        let mut temp: VecDeque<char> = state[fstack]
-            .clone()
-            .into_iter()
-            .take(count)
-            .map(|c| c)
-            .collect();
-
+        let mut temp: VecDeque<char> = state[fstack].drain(0..count).collect::<VecDeque<char>>();
         temp.make_contiguous().reverse();
-        temp.iter().for_each(|c| state[tstack].push_front(*c));
+        temp.iter()
+        .for_each(|c| state[tstack].push_front(*c));
 
-        state[fstack].drain(0..count); // remove the ones we just processed
-
-    // print_stacks( &state );
     } else {
         for _i in 0..count {
             let c = state[fstack].pop_front().unwrap();
@@ -79,10 +69,10 @@ fn execute_step(line: &str, state: &mut Vec<VecDeque<char>>, part2: bool) {
     }
 }
 
-fn _print_stacks(containers: &Vec<VecDeque<char>>) {
+fn _print_stacks(containers: &[VecDeque<char>]) {
     println!("\n===");
-    for i in 0..containers.len() {
-        println!("{:?}", containers[i]);
+    for c in containers {
+        println!("{:?}", *c);
     }
     println!("===\n");
 }
@@ -97,14 +87,9 @@ fn main() {
     //
     if let Ok(lines) = read_lines("input.txt") {
         // Consumes the iterator, returns an (Optional) String
-        for line in lines {
-            if let Ok(l) = line {
-                if l.len() > 0 {
-                    // let row : Vec<char> = l.chars().collect();
-                    // data.push( row );
-                    // println!( "{}", l );
-                    execute_step(&l, &mut containers, false);
-                }
+        for line in lines.flatten() {
+            if !line.is_empty() {
+                execute_step(&line, &mut containers, false);
             }
         }
     }
@@ -113,14 +98,9 @@ fn main() {
     //
     if let Ok(lines) = read_lines("input.txt") {
         // Consumes the iterator, returns an (Optional) String
-        for line in lines {
-            if let Ok(l) = line {
-                if l.len() > 0 {
-                    // let row : Vec<char> = l.chars().collect();
-                    // data.push( row );
-                    // println!( "{}", l );
-                    execute_step(&l, &mut p2containers, true);
-                }
+        for line in lines.flatten() {
+            if !line.is_empty() {
+                execute_step(&line, &mut p2containers, true);
             }
         }
     }
