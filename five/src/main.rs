@@ -72,7 +72,7 @@ fn execute_step(line: &str, state: &mut [VecDeque<char>], part2: bool) {
 fn _print_stacks(containers: &[VecDeque<char>]) {
     println!("\n===");
     for c in containers {
-        println!("{:?}", *c);
+        println!("{:#?}", *c);
     }
     println!("===\n");
 }
@@ -81,7 +81,7 @@ fn main() {
     let mut containers = get_initial_state();
     let mut p2containers = get_initial_state();
 
-    // print_stacks(&containers);
+    // _print_stacks(&containers);
     // Read lines into a vector
     //
     if let Ok(lines) = read_lines("input.txt") {
